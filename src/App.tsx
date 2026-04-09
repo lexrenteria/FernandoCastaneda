@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Instagram, ArrowRight, Menu, X, ArrowLeft } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 // --- Types & Data ---
 
@@ -163,6 +164,46 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   </motion.div>
 );
 
+const SEO = ({ 
+  title, 
+  description, 
+  image, 
+  url 
+}: { 
+  title?: string; 
+  description?: string; 
+  image?: string; 
+  url?: string;
+}) => {
+  const baseTitle = "Fernando Castañeda | Filmmaker";
+  const baseDesc = "Portafolio cinematográfico de Fernando Castañeda, cineasta y co-fundador de Labrador Films.";
+  const baseImage = "https://image.tmdb.org/t/p/original/aPU1KSWkazCdqKZfYCzYfR1mWhb.jpg";
+  const baseUrl = "https://soyfernandocastaneda.com";
+
+  const fullTitle = title ? `${title} | ${baseTitle}` : baseTitle;
+  const fullDesc = description || baseDesc;
+  const fullImage = image || baseImage;
+  const fullUrl = url ? `${baseUrl}${url}` : baseUrl;
+
+  return (
+    <Helmet>
+      <title>{fullTitle}</title>
+      <meta name="description" content={fullDesc} />
+      
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={fullDesc} />
+      <meta property="og:image" content={fullImage} />
+      <meta property="og:url" content={fullUrl} />
+      
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={fullDesc} />
+      <meta name="twitter:image" content={fullImage} />
+      
+      <link rel="canonical" href={fullUrl} />
+    </Helmet>
+  );
+};
+
 const SectionHeading = ({ children, number }: { children: React.ReactNode; number: string }) => (
   <div className="flex items-baseline gap-4 mb-12 border-b border-offwhite/10 pb-4">
     <span className="text-xs font-mono opacity-40">{number}</span>
@@ -233,6 +274,7 @@ const Navbar = ({ scrolled }: { scrolled: boolean }) => {
 const HomePage = () => {
   return (
     <PageWrapper>
+      <SEO />
       {/* Hero Section */}
       <header className="relative h-screen flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-24 overflow-hidden">
         <motion.div 
@@ -388,6 +430,12 @@ const ProjectDetailsPage = () => {
 
   return (
     <PageWrapper>
+      <SEO 
+        title={project.title} 
+        description={project.description || `${project.title} - ${project.type} (${project.year})`}
+        image={project.poster}
+        url={`/proyecto/${project.id}`}
+      />
       <div className="bg-charcoal min-h-screen">
       {/* Hero Still */}
       <div className="relative h-[60vh] md:h-[80vh] overflow-hidden">
@@ -524,6 +572,7 @@ const ProjectDetailsPage = () => {
 const NotFoundPage = () => {
   return (
     <PageWrapper>
+      <SEO title="404 - Escena no encontrada" />
       <div className="h-screen flex flex-col items-center justify-center text-center px-6 space-y-8">
       <motion.h1 
         initial={{ scale: 0.9, opacity: 0 }}
@@ -581,30 +630,32 @@ export default function App() {
   };
 
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <div className="min-h-screen selection:bg-accent selection:text-white">
-        <script type="application/ld+json">
-          {JSON.stringify(schemaData)}
-        </script>
+    <HelmetProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <div className="min-h-screen selection:bg-accent selection:text-white">
+          <script type="application/ld+json">
+            {JSON.stringify(schemaData)}
+          </script>
 
-        <Navbar scrolled={scrolled} />
+          <Navbar scrolled={scrolled} />
 
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/proyecto/:id" element={<ProjectDetailsPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </AnimatePresence>
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/proyecto/:id" element={<ProjectDetailsPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </AnimatePresence>
 
-        {/* Footer */}
-        <footer className="px-6 md:px-12 py-12 border-t border-offwhite/10 flex flex-col md:flex-row justify-between items-center gap-8 opacity-40 text-[10px] uppercase tracking-[0.2em]">
-          <p>© {new Date().getFullYear()} Fernando Castañeda</p>
-          <p>Labrador Films</p>
-          <p>soyfernandocastaneda.com</p>
-        </footer>
-      </div>
-    </BrowserRouter>
+          {/* Footer */}
+          <footer className="px-6 md:px-12 py-12 border-t border-offwhite/10 flex flex-col md:flex-row justify-between items-center gap-8 opacity-40 text-[10px] uppercase tracking-[0.2em]">
+            <p>© {new Date().getFullYear()} Fernando Castañeda</p>
+            <p>Labrador Films</p>
+            <p>soyfernandocastaneda.com</p>
+          </footer>
+        </div>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
