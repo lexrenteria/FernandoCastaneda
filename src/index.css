@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-charcoal: #0a0a0a;
+  --color-offwhite: #f5f5f5;
+  --color-accent: #8b5cf6;
+}
+
+@layer base {
+  body {
+    @apply bg-charcoal text-offwhite font-sans antialiased selection:bg-accent selection:text-white;
+    scroll-behavior: smooth;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+}
+
+.cinematic-text {
+  @apply font-serif italic tracking-tight;
+}
+
+.nav-link {
+  @apply text-sm uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity duration-300;
+}
+
+.project-card {
+  @apply relative overflow-hidden cursor-pointer;
+}
+
+.project-image {
+  @apply w-full aspect-video object-cover grayscale transition-all duration-700 scale-100;
+}
+
+.credits-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4 text-xs uppercase tracking-wider opacity-70;
+}
+
+.credits-label {
+  @apply font-semibold text-accent/80;
+}
+
