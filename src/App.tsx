@@ -286,7 +286,7 @@ const HomePage = () => {
           <img 
             src="https://image.tmdb.org/t/p/original/aPU1KSWkazCdqKZfYCzYfR1mWhb.jpg" 
             alt="Fernando Castañeda"
-            className="w-full h-full object-cover object-top grayscale"
+            className="w-full h-full object-cover object-top lg:object-[center_25%] grayscale"
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent" />
@@ -348,7 +348,7 @@ const HomePage = () => {
                 viewport={{ once: true }}
                 className="space-y-6"
               >
-                <Link to={`/proyecto/${project.id}`} className="project-card group block">
+                <Link to={`/${project.id}`} className="project-card group block">
                   <img 
                     src={project.image} 
                     alt={project.title} 
@@ -366,7 +366,7 @@ const HomePage = () => {
                     <h3 className="text-2xl md:text-3xl uppercase tracking-tighter">{project.title}</h3>
                   </div>
                   <Link 
-                    to={`/proyecto/${project.id}`} 
+                    to={`/${project.id}`} 
                     className="text-[10px] uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-accent transition-all flex items-center gap-2"
                   >
                     Ver Detalles <ArrowRight size={12} />
@@ -434,7 +434,7 @@ const ProjectDetailsPage = () => {
         title={project.title} 
         description={project.description || `${project.title} - ${project.type} (${project.year})`}
         image={project.poster}
-        url={`/proyecto/${project.id}`}
+        url={`/${project.id}`}
       />
       <div className="bg-charcoal min-h-screen">
       {/* Hero Still */}
@@ -546,7 +546,7 @@ const ProjectDetailsPage = () => {
           <SectionHeading number="Next">Otros Proyectos</SectionHeading>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {otherProjects.map((p) => (
-              <Link key={p.id} to={`/proyecto/${p.id}`} className="group space-y-4">
+              <Link key={p.id} to={`/${p.id}`} className="group space-y-4">
                 <div className="aspect-video overflow-hidden border border-offwhite/10">
                   <img 
                     src={p.image} 
@@ -573,27 +573,47 @@ const NotFoundPage = () => {
   return (
     <PageWrapper>
       <SEO title="404 - Escena no encontrada" />
-      <div className="h-screen flex flex-col items-center justify-center text-center px-6 space-y-8">
-      <motion.h1 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="text-[15vw] font-serif leading-none tracking-tighter opacity-10"
-      >
-        404
-      </motion.h1>
-      <div className="space-y-4">
-        <h2 className="text-3xl md:text-5xl font-serif uppercase tracking-tighter">Escena no encontrada</h2>
-        <p className="text-offwhite/40 uppercase tracking-widest text-xs">La página que buscas ha sido eliminada del montaje final.</p>
-      </div>
-      <Link 
-        to="/" 
-        className="inline-flex items-center gap-3 px-8 py-4 border border-offwhite/20 rounded-full text-xs uppercase tracking-widest hover:bg-offwhite hover:text-charcoal transition-all"
-      >
-        <ArrowLeft size={14} /> Volver al Inicio
-      </Link>
+      <div className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+        {/* Cinematic Background for 404 */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://image.tmdb.org/t/p/original/aPU1KSWkazCdqKZfYCzYfR1mWhb.jpg" 
+            alt="Cinematic Background"
+            className="w-full h-full object-cover object-top grayscale opacity-10"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/80 to-charcoal/60" />
+        </div>
+
+        <div className="relative z-10 space-y-8">
+          <motion.h1 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="text-[15vw] font-serif leading-none tracking-tighter opacity-10"
+          >
+            404
+          </motion.h1>
+          <div className="space-y-4">
+            <h2 className="text-3xl md:text-5xl font-serif uppercase tracking-tighter">Escena no encontrada</h2>
+            <p className="text-offwhite/40 uppercase tracking-widest text-xs max-w-md mx-auto">La página que buscas ha sido eliminada del montaje final o pertenece a un metraje descartado.</p>
+          </div>
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-3 px-8 py-4 border border-offwhite/20 rounded-full text-xs uppercase tracking-widest hover:bg-offwhite hover:text-charcoal transition-all mt-8"
+          >
+            <ArrowLeft size={14} /> Volver al Inicio
+          </Link>
+        </div>
       </div>
     </PageWrapper>
   );
+};
+
+const ExternalRedirect = ({ to }: { to: string }) => {
+  useEffect(() => {
+    window.location.href = to;
+  }, [to]);
+  return null;
 };
 
 export default function App() {
@@ -643,7 +663,8 @@ export default function App() {
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/proyecto/:id" element={<ProjectDetailsPage />} />
+              <Route path="/aura-roja-ig" element={<ExternalRedirect to="https://www.instagram.com/auraroja.corto/" />} />
+              <Route path="/:id" element={<ProjectDetailsPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </AnimatePresence>
