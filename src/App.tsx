@@ -36,8 +36,8 @@ const PROJECTS: Project[] = [
     title: "AURA ROJA",
     year: "2026",
     type: "Cortometraje Documental",
-    image: "https://picsum.photos/seed/auraroja-still/1920/1080",
-    poster: "https://picsum.photos/seed/auraroja-poster/600/900",
+    image: "https://i.postimg.cc/ZYVxywKb/Captura-de-pantalla-2025-01-30-a-las-1-01-54-p-m.jpg",
+    poster: "https://image.tmdb.org/t/p/original/iqR2WqklrrbtAWL2bRwJkgaO0rD.jpg",
     techSpecs: {
       duration: "15 min",
       location: "México",
@@ -425,6 +425,17 @@ const ProjectDetailsPage = () => {
   const navigate = useNavigate();
   const project = PROJECTS.find((p) => p.id === id);
   const otherProjects = PROJECTS.filter((p) => p.id !== id);
+
+  useEffect(() => {
+    if (project?.id === 'aura-roja') {
+      document.documentElement.style.setProperty('--accent-color', '#ef4444');
+    } else {
+      document.documentElement.style.removeProperty('--accent-color');
+    }
+    return () => {
+      document.documentElement.style.removeProperty('--accent-color');
+    };
+  }, [project]);
 
   if (!project) return <NotFoundPage />;
 

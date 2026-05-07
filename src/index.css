@@ -7,7 +7,7 @@
   
   --color-charcoal: #0a0a0a;
   --color-offwhite: #f5f5f5;
-  --color-accent: #c084fc;
+  --color-accent: var(--accent-color, #c084fc);
 }
 
 @layer base {
